@@ -23,7 +23,7 @@
           type="text"
           placeholder="Search clients by name or email..."
           v-model="searchQuery"
-          class="w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-0 border-0 cursor-pointer"
+          class="w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-0 border-0"
         />
       </div>
     </div>
@@ -45,8 +45,7 @@
           <tr
             v-for="user in filteredUsers"
             :key="user.id"
-            class="cursor-pointer hover:bg-purple-50 transition-colors border-b border-gray-100"
-            @click="openModal(user)"
+            class="transition-colors border-b border-gray-100"
           >
             <td class="py-3 px-4 font-semibold border-r border-gray-100">{{ user.fullName }}</td>
             <td class="py-3 px-4 border-r border-gray-100">{{ user.email }}</td>
@@ -69,33 +68,6 @@
     <div v-else class="bg-white shadow-md rounded-xl py-10 text-center">
       <p class="text-gray-500">No clients found matching your search.</p>
     </div>
-
-    <!-- Modal -->
-    <div
-      v-if="selectedUser"
-      class="fixed inset-0 flex items-center justify-center bg-black/40 z-50"
-      @click.self="closeModal"
-    >
-      <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-lg relative">
-        <h2 class="text-2xl font-bold mb-4">{{ selectedUser.fullName }}</h2>
-        <Badge :risk="formatRisk(selectedUser.riskTolerance)" class="mb-4" />
-        <div class="space-y-3 text-gray-700">
-          <p><strong>Email:</strong> {{ selectedUser.email }}</p>
-          <p><strong>Phone:</strong> {{ selectedUser.phone }}</p>
-          <p><strong>Risk Tolerance:</strong> {{ formatRisk(selectedUser.riskTolerance) }}</p>
-          <p><strong>Initial Investment:</strong> ₹{{ selectedUser.initialInvestment?.toLocaleString() || 0 }}</p>
-          <p><strong>Joined:</strong> {{ new Date(selectedUser.joinedDate || selectedUser.id).toLocaleDateString() }}</p>
-        </div>
-        <div class="mt-6 text-right">
-          <button
-            @click="closeModal"
-            class="cursor-pointer px-4 py-2 rounded-md bg-gray-100 hover:bg-gray-200"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -110,11 +82,8 @@ import { sampleUsers } from "../../data/UserData.js";
 const router = useRouter();
 const searchQuery = ref("");
 const users = ref([]);
-const selectedUser = ref(null);
 
 const goToAddClient = () => router.push("/users/add");
-const openModal = (user) => (selectedUser.value = user);
-const closeModal = () => (selectedUser.value = null);
 
 onMounted(() => {
   const savedUsers = JSON.parse(localStorage.getItem("clients")) || [];
@@ -132,7 +101,7 @@ const filteredUsers = computed(() => {
 
 const formatRisk = (risk) => {
   if (!risk) return "";
-  switch (risk.toUpperCase()) {
+  switch (String(risk).toUpperCase()) {
     case "MODERATE": return "Moderate";
     case "AGGRESSIVE": return "Aggressive";
     case "CONSERVATIVE": return "Conservative";
@@ -140,3 +109,10 @@ const formatRisk = (risk) => {
   }
 };
 </script>
+
+<style scoped>
+/* small UX nicety: keep rows visually interactive on hover but not clickable */
+tr:hover {
+  background-color: rgba(237, 233, 254, 0.6); /* light purple hover */
+}
+</style>

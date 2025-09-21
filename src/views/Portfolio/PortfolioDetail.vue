@@ -1,30 +1,29 @@
 <template>
   <div class="space-y-10 p-6">
-    <!-- Not Found -->
     <div v-if="!portfolio" class="space-y-6">
       <div class="flex items-center gap-4">
-        <button class="border rounded-md p-2" @click="goBack">
-          <ArrowLeft class="h-4 w-4" />
+        <button @click="goBack" class="p-2 rounded-md hover:bg-gray-100 transition-colors">
+          <ArrowLeft class="h-5 w-5 text-gray-700" />
         </button>
+
         <h1 class="text-3xl font-bold text-foreground">Portfolio Not Found</h1>
       </div>
+
       <Card>
         <div class="py-8 text-center">
-          <p class="text-muted-foreground">
-            The requested portfolio could not be found.
-          </p>
+          <p class="text-muted-foreground">The requested portfolio could not be found.</p>
         </div>
       </Card>
     </div>
 
-    <!-- Portfolio Details -->
     <div v-else>
       <!-- Header -->
       <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-4">
-          <button class="border rounded-md p-2" @click="goBack">
-            <ArrowLeft class="h-4 w-4" />
+          <button @click="goBack" class="p-2 rounded-md hover:bg-gray-100 transition-colors cursor-pointer">
+            <ArrowLeft class="h-5 w-5 text-gray-700" />
           </button>
+
           <div>
             <h1 class="text-3xl font-bold text-foreground">{{ portfolio.name }}</h1>
             <p class="text-muted-foreground">{{ portfolio.clientName }}</p>
@@ -32,32 +31,25 @@
         </div>
 
         <div class="flex items-center gap-3">
-          <span
-            :class="badgeClass(portfolio.status)"
-            class="px-3 py-1 rounded-md text-sm font-medium"
-          >
+          <span :class="badgeClass(portfolio.status)" class="px-3 py-1 rounded-md text-sm font-medium">
             {{ portfolio.status }}
           </span>
 
-          <!-- Edit Portfolio Button (rectangular like Create Portfolio) -->
-          <GradientButton
-            @click="editPortfolio"
-            class="px-3 py-2 rounded-md font-semibold flex items-center gap-2"
-          >
+          <GradientButton @click="editAndNavigate" class="px-3 py-2 rounded-md font-semibold flex items-center gap-2">
             <Edit class="h-4 w-4" />
             Edit Portfolio
           </GradientButton>
         </div>
       </div>
 
-      <!-- Overview Cards -->
+      <!-- Metrics Grid -->
       <div class="grid gap-8 md:grid-cols-4 mb-10">
         <Card class="bg-gradient-to-br from-violet-50 to-white shadow-sm rounded-xl p-4">
           <div class="flex items-center justify-between pb-2">
             <h3 class="text-sm font-medium">Current Value</h3>
             <DollarSign class="h-4 w-4 text-muted-foreground" />
           </div>
-          <div class="text-2xl font-bold">{{ formatCurrency(portfolio.totalValue) }}</div>
+          <div class="text-2xl font-bold">{{ formatCurrencyINR(portfolio.totalValue) }}</div>
           <p class="text-xs text-muted-foreground">Total portfolio value</p>
         </Card>
 
@@ -66,7 +58,7 @@
             <h3 class="text-sm font-medium">Initial Investment</h3>
             <Calendar class="h-4 w-4 text-muted-foreground" />
           </div>
-          <div class="text-2xl font-bold">{{ formatCurrency(portfolio.initialInvestment) }}</div>
+          <div class="text-2xl font-bold">{{ formatCurrencyINR(portfolio.initialInvestment) }}</div>
           <p class="text-xs text-muted-foreground">Original investment</p>
         </Card>
 
@@ -85,7 +77,7 @@
               portfolio.returnPercentage >= 0 ? 'text-green-600' : 'text-red-600'
             ]"
           >
-            {{ formatCurrency(portfolio.currentReturn) }}
+            {{ formatCurrencyINR(portfolio.currentReturn) }}
           </div>
           <p class="text-xs text-muted-foreground">
             {{ portfolio.returnPercentage >= 0 ? '+' : '' }}{{ portfolio.returnPercentage.toFixed(2) }}%
@@ -112,37 +104,60 @@
         </div>
 
         <div v-if="holdings.length > 0" class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="border-b text-gray-600">
-                <th class="py-3 px-4 text-left font-medium">Symbol</th>
-                <th class="py-3 px-4 text-left font-medium">Name</th>
-                <th class="py-3 px-4 text-right font-medium">Quantity</th>
-                <th class="py-3 px-4 text-right font-medium">Price</th>
-                <th class="py-3 px-4 text-right font-medium">Value</th>
-                <th class="py-3 px-4 text-right font-medium">Allocation</th>
-                <th class="py-3 px-4 text-right font-medium">Day Change</th>
+          <table class="w-full text-sm border border-gray-200 rounded-xl shadow-md overflow-hidden">
+            <thead class="bg-gradient-to-r from-violet-50 to-white border-b border-gray-200">
+              <tr>
+                <th class="py-3 px-4 text-left font-medium border-r border-gray-200">Symbol</th>
+                <th class="py-3 px-4 text-left font-medium border-r border-gray-200">Name</th>
+                <th class="py-3 px-4 text-right font-medium border-r border-gray-200">Quantity</th>
+                <th class="py-3 px-4 text-right font-medium border-r border-gray-200">Price</th>
+                <th class="py-3 px-4 text-right font-medium border-r border-gray-200">Value</th>
+                <th class="py-3 px-4 text-right font-medium border-r border-gray-200">Allocation</th>
+                <th class="py-3 px-4 text-center font-medium">Day Change</th>
               </tr>
             </thead>
+
             <tbody>
               <tr
                 v-for="holding in holdings"
                 :key="holding.id"
-                class="border-b last:border-0 hover:bg-gray-50"
+                class="transition-colors border-b border-gray-100 hover:bg-gray-50"
               >
-                <td class="py-3 px-4 font-semibold">{{ holding.symbol }}</td>
-                <td class="py-3 px-4">{{ holding.name }}</td>
-                <td class="py-3 px-4 text-right">{{ holding.quantity.toLocaleString() }}</td>
-                <td class="py-3 px-4 text-right">{{ formatCurrency(holding.currentPrice) }}</td>
-                <td class="py-3 px-4 text-right font-medium">{{ formatCurrency(holding.totalValue) }}</td>
-                <td class="py-3 px-4 text-right">{{ holding.allocation.toFixed(1) }}%</td>
-                <td class="py-3 px-4 text-right">
-                  <span
-                    :class="holding.dayChangePercent >= 0 ? 'text-green-600' : 'text-red-600'"
-                    class="font-medium"
-                  >
-                    {{ holding.dayChange > 0 ? '+' : '' }}{{ formatCurrency(holding.dayChange) }}
-                    ({{ holding.dayChangePercent >= 0 ? '+' : '' }}{{ holding.dayChangePercent.toFixed(2) }}%)
+                <td class="py-3 px-4 font-semibold border-r border-gray-100">
+                  <div class="inline-flex items-center gap-3">
+                    <span
+                      class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-violet-100 text-violet-700 font-bold"
+                    >
+                      {{ holding.symbol[0] }}
+                    </span>
+                    <span class="font-medium ml-1">{{ holding.symbol }}</span>
+                  </div>
+                </td>
+
+                <td class="py-3 px-4 border-r border-gray-100">{{ holding.name }}</td>
+
+                <td class="py-3 px-4 text-right border-r border-gray-100">
+                  {{ holding.quantity.toLocaleString() }}
+                </td>
+
+                <td class="py-3 px-4 text-right border-r border-gray-100">
+                  {{ formatCurrencyINR(holding.currentPrice) }}
+                </td>
+
+                <td class="py-3 px-4 text-right font-medium border-r border-gray-100">
+                  {{ formatCurrencyINR(holding.totalValue) }}
+                </td>
+
+                <td class="py-3 px-4 text-right border-r border-gray-100">
+                  {{ holding.allocation.toFixed(1) }}%
+                </td>
+
+                <td class="py-3 px-4 text-center">
+                  <span :class="holding.dayChangePercent >= 0 ? 'text-green-600' : 'text-red-600'">
+                    {{ holding.dayChange >= 0 ? '+' : '' }}{{ formatCurrencyINR(holding.dayChange) }}
+                    <span class="text-xs ml-2">
+                      {{ holding.dayChangePercent >= 0 ? '+' : '' }}{{ holding.dayChangePercent.toFixed(2) }}%
+                    </span>
                   </span>
                 </td>
               </tr>
@@ -159,44 +174,61 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter } from "vue-router";
-import { ArrowLeft, Edit, TrendingUp, TrendingDown, DollarSign, Calendar } from "lucide-vue-next";
-import Card from "../../components/Card.vue";
-import GradientButton from "../../components/GradientButton.vue";
-import { samplePortfolios } from "../../data/PortfolioData";
-import { mockHoldings } from "../../data/mockHoldings";
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { ArrowLeft, Edit, TrendingUp, TrendingDown, DollarSign, Calendar } from 'lucide-vue-next';
+import Card from '../../components/Card.vue';
+import GradientButton from '../../components/GradientButton.vue';
+import { samplePortfolios } from '../../data/PortfolioData';
+import { mockHoldings } from '../../data/mockHoldings';
 
 const route = useRoute();
 const router = useRouter();
+const store = useStore();
 
-const id = route.params.id as string;
-const portfolio = samplePortfolios.find((p) => p.id === id);
+const id = String(route.params.id || '');
+const portfolios = JSON.parse(localStorage.getItem('portfolios') || '[]');
+const portfolio =
+  (portfolios.length ? portfolios.find((p) => String(p.id) === id) : null) ??
+  samplePortfolios.find((p) => p.id === id) ??
+  null;
+
 const holdings = mockHoldings.filter((h) => h.portfolioId === id);
 
-const goBack = () => router.push("/portfolios");
+const goBack = () => router.push('/portfolios');
 
-const editPortfolio = () => {
-  console.log("Edit portfolio clicked");
+const editAndNavigate = () => {
+  if (!portfolio) return;
+  store.commit('portfolio/setEditing', { ...portfolio });
+  router.push(`/portfolios/${portfolio.id}/edit`);
 };
 
-const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
+const formatCurrencyINR = (amount: number) => {
+  const value = Number(amount ?? 0);
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    minimumFractionDigits: 0
+  }).format(value);
+};
 
 const badgeClass = (status: string) => {
-  switch (status) {
-    case "ACTIVE":
-      return "bg-green-500 text-white";
-    case "UPCOMING":
-      return "bg-blue-500 text-white";
-    case "CLOSED":
-      return "bg-gray-300 text-gray-700";
+  switch ((status || '').toUpperCase()) {
+    case 'ACTIVE':
+      return 'bg-green-500 text-white';
+    case 'UPCOMING':
+      return 'bg-blue-500 text-white';
+    case 'CLOSED':
+      return 'bg-gray-300 text-gray-700';
     default:
-      return "bg-gray-200 text-gray-700";
+      return 'bg-gray-200 text-gray-700';
   }
 };
 </script>
+
+<style scoped>
+table th,
+table td {
+  white-space: nowrap;
+}
+</style>
