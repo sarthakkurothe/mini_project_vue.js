@@ -14,6 +14,12 @@ This project allows users to view portfolios, check detailed metrics and holding
 - Responsive UI with **TailwindCSS**.
 - Fully tested using **Vitest**.
 
+<img width="2830" height="1528" alt="image" src="https://github.com/user-attachments/assets/91c4de54-c875-4678-a764-3e4d80aa35ac" />
+<img width="2830" height="1528" alt="image" src="https://github.com/user-attachments/assets/7136283c-47d3-4c69-9fef-5e06b14736f4" />
+<img width="2756" height="1336" alt="image" src="https://github.com/user-attachments/assets/178ee4ea-e176-4798-a8e4-35c9ab24f5b3" />
+<img width="2756" height="1336" alt="image" src="https://github.com/user-attachments/assets/773315b3-855b-4ac2-9068-f4ef422b0d8b" />
+<img width="2810" height="1532" alt="image" src="https://github.com/user-attachments/assets/1ce2106c-f158-4ab2-bfff-dc1eb8351466" />
+<img width="2218" height="1552" alt="image" src="https://github.com/user-attachments/assets/4ec1e383-ebc5-4d9f-8155-ec4a8aafb9cc" />
 
 ---
 ## **Project Structure**
