@@ -15,7 +15,7 @@ This project allows users to view portfolios, check detailed metrics and holding
 - Fully tested using **Vitest**.
 
 <img width="2830" height="1528" alt="image" src="https://github.com/user-attachments/assets/91c4de54-c875-4678-a764-3e4d80aa35ac" />
-<img width="2830" height="1528" alt="image" src="https://github.com/user-attachments/assets/7136283c-47d3-4c69-9fef-5e06b14736f4" />
+<img width="1392" height="762" alt="Screenshot 2025-09-21 at 7 45 13 PM" src="https://github.com/user-attachments/assets/e391dd67-64d1-4173-986e-aa7638fdd149" />
 <img width="2756" height="1336" alt="image" src="https://github.com/user-attachments/assets/178ee4ea-e176-4798-a8e4-35c9ab24f5b3" />
 <img width="2756" height="1336" alt="image" src="https://github.com/user-attachments/assets/773315b3-855b-4ac2-9068-f4ef422b0d8b" />
 <img width="2810" height="1532" alt="image" src="https://github.com/user-attachments/assets/1ce2106c-f158-4ab2-bfff-dc1eb8351466" />
