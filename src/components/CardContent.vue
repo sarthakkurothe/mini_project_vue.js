@@ -5,5 +5,4 @@
 </template>
 
 <script setup>
-// Card content wrapper
 </script>

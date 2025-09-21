@@ -35,7 +35,7 @@
             {{ portfolio.status }}
           </span>
 
-          <GradientButton @click="editAndNavigate" class="px-3 py-2 rounded-md font-semibold flex items-center gap-2">
+          <GradientButton @click="editAndNavigate" class="cursor-pointer px-3 py-2 rounded-md font-semibold flex items-center gap-2">
             <Edit class="h-4 w-4" />
             Edit Portfolio
           </GradientButton>
@@ -98,12 +98,12 @@
 
       <!-- Holdings Table -->
       <Card class="bg-white shadow-sm rounded-xl">
-        <div class="p-4 border-b">
+        <div class="p-4 pb-6 border-b border-gray-200">
           <h3 class="text-lg font-semibold">Holdings</h3>
           <p class="text-sm text-muted-foreground">Current positions in this portfolio</p>
         </div>
 
-        <div v-if="holdings.length > 0" class="overflow-x-auto">
+        <div v-if="holdings.length > 0" class="overflow-x-auto mt-4">
           <table class="w-full text-sm border border-gray-200 rounded-xl shadow-md overflow-hidden">
             <thead class="bg-gradient-to-r from-violet-50 to-white border-b border-gray-200">
               <tr>

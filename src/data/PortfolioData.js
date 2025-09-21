@@ -1,5 +1,3 @@
-// src/data/PortfolioData.js
-
 export const samplePortfolios = [
   {
     id: "1",

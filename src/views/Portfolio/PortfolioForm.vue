@@ -25,7 +25,6 @@
         <h2 class="text-xl font-semibold mb-6">Portfolio Details</h2>
 
         <form @submit.prevent="handleSubmit" class="space-y-5">
-          <!-- Row 1: Name + Client -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Portfolio Name -->
             <div>
@@ -101,7 +100,6 @@
             </div>
           </div>
 
-          <!-- Row 2: Status + Initial Investment -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Portfolio Status -->
             <div>
@@ -248,18 +246,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import GradientButton from "../../components/GradientButton.vue";
 import { ArrowLeft, Save } from "lucide-vue-next";
-import {
-  Menu,
-  MenuButton,
-  MenuItems,
-  MenuItem,
-  Transition,
-} from "@headlessui/vue";
+import { Menu, MenuButton, MenuItems, MenuItem, Transition } from "@headlessui/vue";
 import { ChevronDownIcon } from "@heroicons/vue/24/solid";
 import Badge from "../../components/Badge.vue";
 
@@ -267,7 +259,6 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
-/* -------------------- Form Data -------------------- */
 const formData = reactive({
   id: "",
   name: "",
@@ -284,34 +275,19 @@ const errors = reactive({
   initialInvestment: "",
 });
 
-/* -------------------- Clients -------------------- */
 type ClientRaw = Record<string, any>;
 type ClientItem = { id: string; name: string; amount: string; raw: ClientRaw };
 const clients = ref<ClientItem[]>([]);
 
 const loadClients = () => {
   const saved = JSON.parse(localStorage.getItem("clients") || "[]") as ClientRaw[];
-  if (saved && saved.length) {
-    clients.value = saved.map((c: ClientRaw) => {
-      const name = c.fullName || c.name || c.displayName || "Unnamed";
-
-      let rawValue =
-        c.totalPortfolioValue ??
-        c.initialInvestment ??
-        c.portfolioValue ??
-        0;
-      let value = isNaN(Number(rawValue)) ? 0 : Number(rawValue);
-
-      return {
-        id: String(c.id ?? c.clientId ?? Date.now()),
-        name,
-        amount: value.toLocaleString("en-IN"),
-        raw: c,
-      };
-    });
-  }
+  clients.value = saved.map((c: ClientRaw) => {
+    const name = c.fullName || c.name || c.displayName || "Unnamed";
+    const rawValue = c.totalPortfolioValue ?? c.initialInvestment ?? c.portfolioValue ?? 0;
+    const amount = isNaN(Number(rawValue)) ? "0" : Number(rawValue).toLocaleString("en-IN");
+    return { id: String(c.id ?? c.clientId ?? Date.now()), name, amount, raw: c };
+  });
 };
-
 
 const selectClient = (c: ClientItem) => {
   formData.clientId = c.id;
@@ -328,47 +304,37 @@ const selectedClientName = computed(() => {
   return client ? client.name : "";
 });
 
-/* -------------------- Status -------------------- */
 const statusOptions = ["ACTIVE", "UPCOMING", "CLOSED"];
-const statusColors: Record<string, string> = {
-  ACTIVE: "green",
-  UPCOMING: "yellow",
-  CLOSED: "gray",
-};
-
+const statusColors: Record<string, string> = { ACTIVE: "green", UPCOMING: "yellow", CLOSED: "gray" };
 const selectStatus = (s: string) => {
   formData.status = s;
   errors.status = "";
 };
 
-/* -------------------- Computed -------------------- */
 const formattedInitialInvestment = computed(() =>
   formData.initialInvestment
-    ? new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-        maximumFractionDigits: 0,
-      }).format(Number(formData.initialInvestment))
+    ? new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(Number(formData.initialInvestment))
     : "Not specified"
 );
 
 const isEditing = computed(() => !!formData.id);
 
-/* -------------------- Lifecycle -------------------- */
 onMounted(() => {
   loadClients();
+
+  const editingPortfolio = store.state.portfolio.editing;
+  if (editingPortfolio) {
+    Object.assign(formData, { ...editingPortfolio });
+  }
 });
 
 const navigateBack = () => router.push("/portfolios");
 
-/* -------------------- Validation & Submit -------------------- */
 const validate = () => {
   errors.name = formData.name ? "" : "Portfolio name is required";
   errors.clientId = formData.clientId ? "" : "Client is required";
   errors.status = formData.status ? "" : "Status is required";
-  errors.initialInvestment =
-    formData.initialInvestment > 0 ? "" : "Initial investment is required";
-
+  errors.initialInvestment = formData.initialInvestment > 0 ? "" : "Initial investment is required";
   return !errors.name && !errors.clientId && !errors.status && !errors.initialInvestment;
 };
 

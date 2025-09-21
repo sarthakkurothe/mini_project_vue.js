@@ -1,5 +1,3 @@
-// src/data/mockHoldings.js
-
 export const mockHoldings = [
   {
     id: "1",

@@ -11,7 +11,7 @@
 
 <style scoped>
 .gradient-button {
-  background: linear-gradient(270deg, #7b5cf5, #ec4899); /* Purple-to-pink gradient like tab */
+  background: linear-gradient(270deg, #7b5cf5, #ec4899); 
   background-size: 600% 600%;
   transition: background-position 0.5s ease;
 }
