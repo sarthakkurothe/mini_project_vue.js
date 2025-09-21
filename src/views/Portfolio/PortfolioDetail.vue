@@ -1,8 +1,13 @@
 <template>
   <div class="space-y-10 p-6">
+    <!-- Portfolio Not Found -->
     <div v-if="!portfolio" class="space-y-6">
       <div class="flex items-center gap-4">
-        <button @click="goBack" class="p-2 rounded-md hover:bg-gray-100 transition-colors">
+        <button
+          @click="goBack"
+          data-testid="back-button"
+          class="p-2 rounded-md hover:bg-gray-100 transition-colors"
+        >
           <ArrowLeft class="h-5 w-5 text-gray-700" />
         </button>
 
@@ -16,11 +21,16 @@
       </Card>
     </div>
 
+    <!-- Portfolio Details -->
     <div v-else>
       <!-- Header -->
       <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-4">
-          <button @click="goBack" class="p-2 rounded-md hover:bg-gray-100 transition-colors cursor-pointer">
+          <button
+            @click="goBack"
+            data-testid="back-button"
+            class="p-2 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+          >
             <ArrowLeft class="h-5 w-5 text-gray-700" />
           </button>
 
@@ -31,11 +41,18 @@
         </div>
 
         <div class="flex items-center gap-3">
-          <span :class="badgeClass(portfolio.status)" class="px-3 py-1 rounded-md text-sm font-medium">
+          <span
+            :class="badgeClass(portfolio.status)"
+            class="px-3 py-1 rounded-md text-sm font-medium"
+          >
             {{ portfolio.status }}
           </span>
 
-          <GradientButton @click="editAndNavigate" class="cursor-pointer px-3 py-2 rounded-md font-semibold flex items-center gap-2">
+          <GradientButton
+            @click="editAndNavigate"
+            data-testid="edit-button"
+            class="cursor-pointer px-3 py-2 rounded-md font-semibold flex items-center gap-2"
+          >
             <Edit class="h-4 w-4" />
             Edit Portfolio
           </GradientButton>
@@ -103,7 +120,7 @@
           <p class="text-sm text-muted-foreground">Current positions in this portfolio</p>
         </div>
 
-        <div v-if="holdings.length > 0" class="overflow-x-auto mt-4">
+        <div v-if="holdings.length" class="overflow-x-auto mt-4">
           <table class="w-full text-sm border border-gray-200 rounded-xl shadow-md overflow-hidden">
             <thead class="bg-gradient-to-r from-violet-50 to-white border-b border-gray-200">
               <tr>
@@ -133,31 +150,15 @@
                     <span class="font-medium ml-1">{{ holding.symbol }}</span>
                   </div>
                 </td>
-
                 <td class="py-3 px-4 border-r border-gray-100">{{ holding.name }}</td>
-
-                <td class="py-3 px-4 text-right border-r border-gray-100">
-                  {{ holding.quantity.toLocaleString() }}
-                </td>
-
-                <td class="py-3 px-4 text-right border-r border-gray-100">
-                  {{ formatCurrencyINR(holding.currentPrice) }}
-                </td>
-
-                <td class="py-3 px-4 text-right font-medium border-r border-gray-100">
-                  {{ formatCurrencyINR(holding.totalValue) }}
-                </td>
-
-                <td class="py-3 px-4 text-right border-r border-gray-100">
-                  {{ holding.allocation.toFixed(1) }}%
-                </td>
-
+                <td class="py-3 px-4 text-right border-r border-gray-100">{{ holding.quantity.toLocaleString() }}</td>
+                <td class="py-3 px-4 text-right border-r border-gray-100">{{ formatCurrencyINR(holding.currentPrice) }}</td>
+                <td class="py-3 px-4 text-right font-medium border-r border-gray-100">{{ formatCurrencyINR(holding.totalValue) }}</td>
+                <td class="py-3 px-4 text-right border-r border-gray-100">{{ holding.allocation.toFixed(1) }}%</td>
                 <td class="py-3 px-4 text-center">
                   <span :class="holding.dayChangePercent >= 0 ? 'text-green-600' : 'text-red-600'">
                     {{ holding.dayChange >= 0 ? '+' : '' }}{{ formatCurrencyINR(holding.dayChange) }}
-                    <span class="text-xs ml-2">
-                      {{ holding.dayChangePercent >= 0 ? '+' : '' }}{{ holding.dayChangePercent.toFixed(2) }}%
-                    </span>
+                    <span class="text-xs ml-2">{{ holding.dayChangePercent >= 0 ? '+' : '' }}{{ holding.dayChangePercent.toFixed(2) }}%</span>
                   </span>
                 </td>
               </tr>

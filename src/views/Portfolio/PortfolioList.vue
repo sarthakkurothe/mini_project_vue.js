@@ -91,6 +91,8 @@ const portfolios = ref([]);
 const goToAddPortfolio = () => router.push('/portfolios/add');
 const goToPortfolio = (id) => router.push(`/portfolios/${id}`);
 
+defineExpose({ goToAddPortfolio, goToPortfolio });
+
 onMounted(() => {
   const saved = JSON.parse(localStorage.getItem('portfolios') || '[]');
   portfolios.value = saved.length ? saved : samplePortfolios;
