@@ -1,20 +1,21 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import UserList from '../views/UserList.vue'
-import UserForm from '../views/UserForm.vue'
-import PaymentList from '../views/PaymentList.vue'
-import PaymentDetail from '../views/PaymentDetail.vue'
-import PaymentForm from '../views/PaymentForm.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import Dashboard from '../views/Dashboard.vue';
+import UserList from '../views/users/UserList.vue';
+import UserForm from '../views/users/UserForm.vue';
+import PortfolioList from '../views/Portfolio/PortfolioList.vue';
+import PortfolioDetail from '../views/Portfolio/PortfolioDetail.vue';
 
 const routes = [
-  { path: '/', redirect: '/users' },
-  { path: '/users', component: UserList },
-  { path: '/users/new', component: UserForm },
-  { path: '/payments', component: PaymentList },
-  { path: '/payments/:id', component: PaymentDetail, props: true },
-  { path: '/payments/new', component: PaymentForm },
-]
+  { path: '/', name: 'Dashboard', component: Dashboard },
+  { path: '/users', name: 'Clients', component: UserList },
+  { path: '/users/add', name: 'AddClient', component: UserForm },
+  { path: '/portfolios', name: 'Portfolios', component: PortfolioList },
+  { path: '/portfolios/:id', name: 'PortfolioDetail', component: PortfolioDetail, props: true }, 
+];
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes,
-})
+});
+
+export default router;

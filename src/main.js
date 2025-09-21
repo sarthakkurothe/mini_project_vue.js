@@ -1,14 +1,12 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import App from './App.vue'
-import router from './router'
-import './style.css'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+import { MotionPlugin } from '@vueuse/motion'; // make sure this package is installed
+import './style.css'; // tailwind / css
 
-const app = createApp(App)
+const app = createApp(App);
 
-const pinia = createPinia()
-app.use(pinia)
+app.use(router);
+app.use(MotionPlugin); // register v-motion directive
 
-app.use(router)
-
-app.mount('#app')
+app.mount('#app');
